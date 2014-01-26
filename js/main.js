@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 var svg;
 
+=======
+>>>>>>> 0ddc088fdd5522108104b9880ed92b43449a91f8
 /**
 THIS FUNCTION IS CALLED WHEN THE WEB PAGE LOADS. PLACE YOUR CODE TO LOAD THE
 DATA AND DRAW YOUR VISUALIZATION HERE. THE VIS SHOULD BE DRAWN INTO THE "VIS" 
@@ -8,6 +11,7 @@ DIV ON THE PAGE.
 This function is passed the variables to initially draw on the x and y axes.
 **/
 function init(xAxis, yAxis){
+<<<<<<< HEAD
     xdata = xAxis;
     ydata = yAxis;
     
@@ -65,6 +69,16 @@ function init(xAxis, yAxis){
            .attr("height", function(d) { return height - y(d.frequency); });
            
            });*/
+=======
+    
+    //Load the dataset from data.csv using xAxis and yAxis variables
+    var dataset = [];
+    d3.csv("data/data.csv", function(data) {
+           dataset = data.map(function(d) { return [ +d[xAxis], +d[yAxis] ]; });
+           console.log(dataset);
+    });
+    
+>>>>>>> 0ddc088fdd5522108104b9880ed92b43449a91f8
 }
 
 /**
