@@ -115,8 +115,3 @@ a string and it will be displayed. For example,
 function showDetails(string){
     d3.select('#details').html(string);
 }
-
-function type(d) {
-    d.frequency = +d.frequency;
-    return d;
-}
