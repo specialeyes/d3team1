@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 var svg;
-
-=======
->>>>>>> 0ddc088fdd5522108104b9880ed92b43449a91f8
 /**
 THIS FUNCTION IS CALLED WHEN THE WEB PAGE LOADS. PLACE YOUR CODE TO LOAD THE
 DATA AND DRAW YOUR VISUALIZATION HERE. THE VIS SHOULD BE DRAWN INTO THE "VIS" 
@@ -11,32 +7,26 @@ DIV ON THE PAGE.
 This function is passed the variables to initially draw on the x and y axes.
 **/
 function init(xAxis, yAxis){
-    var dataset = [];
-    d3.csv("data/data.csv", function(data) {
-           dataset = data.map(function(d) { return [ +d[xAxis], +d[yAxis] ]; });
-           console.log(dataset);
-           });
-    xdata = xAxis;
-    ydata = yAxis;
-    
+   
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
     
-    var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+    var xScale = d3.scale.linear()
+    .range([0, width]);
     
-    var y = d3.scale.linear()
+    var yScale = d3.scale.linear()
     .range([height, 0]);
     
-    var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+    var xaxis = d3.svg.axis()
+    .scale(xScale)
+    .orient("bottom")
+    .ticks(10);
     
-    var yAxis = d3.svg.axis()
-    .scale(y)
+    var yaxis = d3.svg.axis()
+    .scale(yScale)
     .orient("left")
-    .ticks(10, "%");
+    .ticks(10);
     
     svg = d3.select("#vis").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -44,35 +34,60 @@ function init(xAxis, yAxis){
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
-   /* d3.csv("data/data.csv", type, function(error, data) {
-           x.domain(data.map(function(d) { return d.letter; }));
-           y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+    var dataset = [];
+    d3.csv("data/data.csv", function(data) {
+           dataset = data.map(function(d) { return [ +d[xAxis], +d[yAxis] ]; });
+           console.log(dataset[0]);
+           xScale.domain(data.map(function(d) { return d.letter; }));
+           yScale.domain([0, d3.max(data, function(d) { return d.frequency; })]);
            
            svg.append("g")
            .attr("class", "x axis")
            .attr("transform", "translate(0," + height + ")")
-           .call(xAxis);
+           .call(xaxis)
+           .append("text")
+           .attr("y", -10)
+           .attr("dy", ".71em")
+           .attr("x", width)
+           .attr("dx", "0em")
+           .style("text-anchor", "end")
+           .text(xAxis);
            
            svg.append("g")
            .attr("class", "y axis")
-           .call(yAxis)
+           .call(yaxis)
            .append("text")
            .attr("transform", "rotate(-90)")
            .attr("y", 6)
            .attr("dy", ".71em")
            .style("text-anchor", "end")
-           .text("Frequency");
+           .text(yAxis);
            
-           svg.selectAll(".bar")
-           .data(data)
-           .enter().append("rect")
-           .attr("class", "bar")
-           .attr("x", function(d) { return x(d.letter); })
-           .attr("width", x.rangeBand())
-           .attr("y", function(d) { return y(d.frequency); })
-           .attr("height", function(d) { return height - y(d.frequency); });
+           //Create circles
+           svg.selectAll("circle")
+           .data(dataset)
+           .enter()
+           .append("circle")
+           .attr("cx", function(d) {
+                 return xScale(d[0]);
+                 })
+           .attr("cy", function(d) {
+                 return yScale(d[1]);
+                 });
            
-           });*/
+           //Create X axis
+           svg.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(0," + height + ")")
+           .call(xaxis);
+           
+           //Create Y axis
+           svg.append("g")
+           .attr("class", "axis")
+           .attr("transform", "translate(" + 0 + ",0)")
+           .call(yaxis);
+           
+           });
     //Load the dataset from data.csv using xAxis and yAxis variables
 }
 
