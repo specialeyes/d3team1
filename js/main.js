@@ -1,3 +1,5 @@
+
+var xAxisData, yAxisData
 /**
 THIS FUNCTION IS CALLED WHEN THE WEB PAGE LOADS. PLACE YOUR CODE TO LOAD THE
 DATA AND DRAW YOUR VISUALIZATION HERE. THE VIS SHOULD BE DRAWN INTO THE "VIS" 
@@ -8,6 +10,8 @@ This function is passed the variables to initially draw on the x and y axes.
 
 ///fjdiopfjaasd
 function init(xAxis, yAxis){
+    xAxisData = xAxis;
+    yAxisData = yAxis;
     var dataset = [];
     d3.csv("data/data.csv", function(data) {
            dataset = data.map(function(d) { return [ +d[xAxis], +d[yAxis] ]; });
@@ -28,15 +32,18 @@ function init(xAxis, yAxis){
            
            // x and y scales, I've used linear here but there are other options
            // the scales translate data values to pixel values for you
+           var range = d3.max(xdata)-d3.min(xdata);
            var x = d3.scale.linear()
-           .domain([d3.min(xdata), d3.max(xdata)])  // the range of the values to plot
+           .domain([d3.min(xdata)-range/15.0, d3.max(xdata)+range/15.0])  // the range of the values to plot
            .range([ 0, width ]);        // the pixel range of the x-axis
            
+           range = d3.max(ydata)-d3.min(ydata);
            var y = d3.scale.linear()
-           .domain([d3.min(ydata), d3.max(ydata)])
+           .domain([d3.min(ydata)-range/15.0, d3.max(ydata)+range/15.0])
            .range([ height, 0 ]);
            
            // the chart object, includes all margins
+           d3.select('svg').remove();
            var chart = d3.select('#vis')
            .append('svg:svg')
            .attr('width', width + margin.right + margin.left)
@@ -92,7 +99,7 @@ x axis changes. It is passed the variable name that has been selected, such as
 **/
 function onXAxisChange(value){
     console.log("on x axis change");
-    init(value, ydata);
+    init(value, yAxisData);
 }
 
 
@@ -104,8 +111,8 @@ y axis changes. It is passed the variable name that has been selected, such as
 accordingly.
 **/
 function onYAxisChange(value){
-    console.log("on x axis change");
-    init(xdata, value);
+    console.log("on y axis change");
+    init(xAxisData, value);
 }
 
 /**
