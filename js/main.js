@@ -5,6 +5,8 @@ DIV ON THE PAGE.
 
 This function is passed the variables to initially draw on the x and y axes.
 **/
+
+///fjdiopfjaasd
 function init(xAxis, yAxis){
     var dataset = [];
     d3.csv("data/data.csv", function(data) {
