@@ -63,7 +63,7 @@ function init(xAxis, yAxis){
                 .attr("x", width)
                 .attr("dy", "-0.4em")
                 .style("text-anchor", "end")
-                .text(xAxis);
+                .text(axisLabel(xAxis));
            plot.append("g")
                 .attr("transform", "translate(0,0)")
                 .attr("class", "main axis date")
@@ -73,26 +73,29 @@ function init(xAxis, yAxis){
                 .attr("y", 6)
                 .attr("dy", "0.71em")
                 .style("text-anchor", "end")
-                .text(yAxis);
+                .text(axisLabel(yAxis));
            
            var legend = plot.append("g")                                //Append Legend
                 .attr("class", "legend")
-                .attr("x", width)
-                .attr("y", 25)
                 .attr("height", 100)
-                .attr("width", 100);
-           for(var i = 0; i < 3; i++) {
-               legend.append("text")
-                    .attr("x", width - 50)
-                    .attr("y", 25*i)
-                    .text(function(d) { return varities[i]; });
-               legend.append("rect")
-                    .attr("x", width)
-                    .attr("y", 25*i)
-                    .attr("width", 10)
-                    .attr("height", 10)
-                    .style("fill", function(d) { return chooseColor(varities[i]); });
-           }
+                .attr("width", 100)
+                .attr("transform", "translate(20,10)");
+           legend.selectAll("rect")
+                .data(varities)
+                .enter()
+                .append("rect")
+                .attr("x", width - 65)
+                .attr("y", function(d, i){ return 20*i;})
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("fill", function(d, i) { return chooseColor(varities[i]); });
+           legend.selectAll('text')
+                .data(varities)
+                .enter()
+                .append("text")
+                .attr("x", width - 52)
+                .attr("y", function(d, i){ return 20*i + 9;})
+                .text(function(d, i) { return varities[i]; });
            
            plot.append("g")                                             //Plot data
                 .selectAll("points")
@@ -122,6 +125,14 @@ function displayData(i) {
         .append("text").html("Asymmetry Coefficient: " + aData[i] + "</br>")
         .append("text").html("Groove Length: " + gData[i] + "</br>")
         .append("text").html("Variety: " + vData[i] + "</br>") ;
+}
+
+function axisLabel(s) {
+    if(s == "compactness") return "Compactness";
+    else if(s == "kernelLength") return "Kernel Length";
+    else if(s == "kernelWidth") return "Kernel Width";
+    else if(s == "asymmetryCoefficient") return "Asymmetry Coefficient";
+    else return "Groove Length";
 }
 
 /**
